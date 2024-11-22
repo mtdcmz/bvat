@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="logo.png" sizes="16x16" type="image/png"> 
+    <title>搜索结果 - BilibiliVideoArchiveTeam</title>
+    <style>
+        :root {
+            --primary-color: #FB7299;
+            --secondary-color: #23ADE5;
+            --background-color: #F6F6F6;
+            --text-color: #333333;
+            --card-background: #FFFFFF;
+            --bv-color: #999999;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        header {
+            background-color: var(--card-background);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 0.5rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px 0 0 4px;
+            font-size: 1rem;
+        }
+
+        .search-button {
+            padding: 0.5rem 1rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-button:hover {
+            background-color: #1E95C4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-background);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .video-title {
+            font-weight: bold;
+        }
+
+        .video-bv {
+            color: var(--bv-color);
+            font-size: 0.9rem;
+        }
+
+        .go-button {
+            padding: 0.5rem 1rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .go-button:hover {
+            background-color: #1E95C4;
+        }
+
+        .search-results {
+            margin-top: 2rem;
+        }
+
+        .no-results {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 2rem;
+        }
+
+        footer {
+            background-color: var(--card-background);
+            box-shadow: 0 -2px 4px rgba(0, 0,0,0.1);
+            padding: 2rem 0;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .poem {
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .author-info {
+            font-size: 0.9rem;
+            color: var(--bv-color);
+        }
+
+        .author-info a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .author-info a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .logo {
+                margin-bottom: 1rem;
+            }
+
+            .search-form {
+                width: 100%;
+            }
+
+            .search-input {
+                flex-grow: 1;
+            }
+
+            th, td {
+                padding: 0.5rem;
+            }
+
+            .video-title, .video-bv {
+                font-size: 0.9rem;
+            }
+
+            .go-button {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="logo.png" alt="BilibiliVideoArchiveTeam Logo">
+                <h1>BilibiliVideoArchiveTeam</h1>
+            </div>
+            <form class="search-form" action="search.html" method="get">
+                <input type="text" name="q" class="search-input" placeholder="搜索视频...">
+                <button type="submit" class="search-button">搜索</button>
+            </form>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="search-results">
+            <h2>搜索结果</h2>
+            <table id="results-table">
+                <thead>
+                    <tr>
+                        <th>视频标题</th>
+                        <th>BV号</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="results-container"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p id="poem" class="poem">加载中...</p>
+            <p class="author-info">站长：梅塔的长名字 | <a href="https://space.bilibili.com/426046208" target="_blank">哔哩哔哩主页</a></p>
+        </div>
+    </footer>
+
+    <script>
+        async function searchVideos() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+
+            if (!query) {
+                document.querySelector('.search-results').innerHTML = '<p class="no-results">请输入搜索关键词</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch('vid.json');
+                const allVideos = await response.json();
+
+                const results = allVideos.filter(video => 
+                    video.title.toLowerCase().includes(query.toLowerCase()) ||
+                    video.bvid.toLowerCase().includes(query.toLowerCase())
+                );
+
+                displayResults(results);
+            } catch (error) {
+                console.error('Error fetching or filtering video data:', error);
+                document.querySelector('.search-results').innerHTML = '<p class="no-results">搜索时发生错误，请稍后再试</p>';
+            }
+        }
+
+        function displayResults(results) {
+            const resultsContainer = document.getElementById('results-container');
+            resultsContainer.innerHTML = '';
+
+            if (results.length === 0) {
+                document.querySelector('.search-results').innerHTML = '<p class="no-results">没有找到匹配的视频</p>';
+                return;
+            }
+
+            results.forEach(video => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="video-title">${video.title}</div>
+                    </td>
+                    <td>
+                        <div class="video-bv">${video.bvid}</div>
+                    </td>
+                    <td>
+                        <a href="https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank">Go➡️</a>
+                    </td>
+                `;
+                resultsContainer.appendChild(row);
+            });
+        }
+
+        async function fetchPoem() {
+            try {
+                const response = await fetch('https://v1.jinrishici.com/rensheng.txt');
+                const poem = await response.text();
+                document.getElementById('poem').textContent = poem;
+            } catch (error) {
+                console.error('Error fetching poem:', error);
+                document.getElementById('poem').textContent = '诗词加载失败，请刷新重试。';
+            }
+        }
+
+        searchVideos();
+        fetchPoem();
+    </script>
+</body>
+</html>
+
