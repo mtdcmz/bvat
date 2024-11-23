@@ -283,23 +283,34 @@
             }
         }
 
-        async function checkArchiveStatus(md5, button) {
-            const url = `http://web.archive.org/web/0if_/https://vdse.bdstatic.com/${md5}.mp4`;
-            button.disabled = true; // 禁用按钮，防止重复点击
-            button.textContent = '检测中...';
+ async function checkArchiveStatus(md5, button) {
+    // 使用 https 替代 http，避免安全拦截
+    const url = `https://web.archive.org/web/0if_/https://vdse.bdstatic.com/${md5}.mp4`;
+    button.disabled = true; // 禁用按钮，防止重复点击
+    button.textContent = '检测中...';
 
-            try {
-                const response = await fetch(url);
-                if (response.ok) {
-                    button.outerHTML = `<span style="color: green;">●</span> 已存档`;
-                } else {
-                    button.outerHTML = `<span style="color: red;">●</span> 未存档`;
-                }
-            } catch (error) {
-                console.error('Error checking archive status:', error);
-                button.outerHTML = `<span style="color: red;">●</span> 检测失败`;
-            }
+    try {
+        // 发起请求检测存档状态
+        const response = await fetch(url);
+
+        // 检查 HTTP 状态码，如果为 200 则表示已存档
+        if (response.ok) {
+            // 显示“已存档”状态
+            button.outerHTML = `<span style="color: green;">●</span> 已存档`;
+        } else if (response.status === 404) {
+            // 显示“未存档”状态
+            button.outerHTML = `<span style="color: red;">●</span> 未存档`;
+        } else {
+            // 其他状态码情况，标记为检测失败
+            console.error(`Unexpected response status: ${response.status}`);
+            button.outerHTML = `<span style="color: red;">●</span> 检测失败`;
         }
+    } catch (error) {
+        // 捕获并显示详细的错误信息
+        console.error('Error checking archive status:', error.message);
+        button.outerHTML = `<span style="color: red;">●</span> 检测失败`;
+    }
+}
 
         async function loadMoreVideos() {
             const startIndex = (currentPage - 1) * itemsPerPage;
