@@ -229,7 +229,7 @@
                 <img src="logo.png" alt="BilibiliVideoArchiveTeam Logo">
                 <h1>BilibiliVideoArchiveTeam</h1>
             </div>
-            <form class="search-form" action="search.html" method="get">
+            <form class="search-form" action="search" method="get">
                 <input type="text" name="q" class="search-input" placeholder="搜索视频...">
                 <button type="submit" class="search-button">搜索</button>
             </form>
@@ -256,7 +256,7 @@
     <footer>
         <div class="footer-content">
             <p id="poem" class="poem">加载中...</p>
-            <p class="author-info">站长：梅塔的长名字 | <a href="https://space.bilibili.com/426046208" target="_blank">哔哩哔哩主页</a> | <a href="help.html">【测试】开放接口</a></p>
+            <p class="author-info">站长：梅塔的长名字 | <a href="https://space.bilibili.com/426046208" target="_blank">哔哩哔哩主页</a> | <a href="help">【测试】开放接口</a></p>
         </div>
     </footer>
 
@@ -328,7 +328,7 @@
         }
 
         async function checkArchiveStatus(md5, button) {
-            const url = `https://your-worker-domain.workers.dev?md5=${md5}`;
+            const url = `https://save.mtdcmz.workers.dev?md5=${md5}`;
             button.disabled = true; // 禁用按钮，防止重复点击
             button.textContent = '检测中...';
 
