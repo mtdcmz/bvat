@@ -167,21 +167,7 @@
             margin-bottom: 1rem;
             color: var(--primary-color);
         }
-        
-                .author-info {
-            font-size: 0.9rem;
-            color: var(--bv-color);
-        }
 
-        .author-info a {
-            color: var(--secondary-color);
-            text-decoration: none;
-        }
-
-        .author-info a:hover {
-            text-decoration: underline;
-        }
-        
         .footer-content {
             display: flex;
             flex-direction: column;
@@ -259,6 +245,7 @@
                         <th>视频标题</th>
                         <th>BV号</th>
                         <th>操作</th>
+                        <th>存储状态</th>
                     </tr>
                 </thead>
                 <tbody id="results-container"></tbody>
@@ -321,6 +308,9 @@
                         <a href="https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank">Go➡️</a>
                         <a href="http://web.archive.org/save/https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank" style="margin-left: 0.5rem;">Save🏛️</a>
                     </td>
+                    <td>
+                        <button class="check-button" onclick="checkArchiveStatus('${video.md5}', this)">检测</button>
+                    </td>
                 `;
                 resultsContainer.appendChild(row);
             });
@@ -337,9 +327,35 @@
             }
         }
 
+        async function checkArchiveStatus(md5, button) {
+            const url = `https://save.mtdcmz.workers.dev?md5=${md5}`;
+            button.disabled = true; // 禁用按钮，防止重复点击
+            button.textContent = '检测中...';
+
+            try {
+                // 调用 Cloudflare Worker API
+                const response = await fetch(url);
+                const data = await response.json();
+
+                // 根据 Worker 返回的存档状态进行更新
+                if (data.status === '存档') {
+                    // 如果已存档，显示绿色圆点并标记为“已存档”
+                    button.outerHTML = `<span style="color: green;">●</span> 已存档`;
+                } else if (data.status === '未存档') {
+                    // 如果未存档，显示红色圆点并标记为“未存档”
+                    button.outerHTML = `<span style="color: red;">●</span> 未存档`;
+                } else {
+                    // 如果出现错误，显示“检测失败”
+                    button.outerHTML = `<span style="color: red;">●</span> 检测失败`;
+                }
+            } catch (error) {
+                console.error('Error checking archive status:', error);
+                button.outerHTML = `<span style="color: red;">●</span> 检测失败`;
+            }
+        }
+
         searchVideos();
         fetchPoem();
     </script>
 </body>
 </html>
-
