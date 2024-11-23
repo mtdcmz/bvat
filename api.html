@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="logo.png" sizes="16x16" type="image/png"> 
+    <title>BilibiliVideoArchiveTeam API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .error {
+            color: #d00;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>BilibiliVideoArchiveTeam API</h1>
+    <div id="result"></div>
+
+    <script>
+        async function fetchVideoData(bvid) {
+            try {
+                const response = await fetch('vid.json');
+                const data = await response.json();
+                const video = data.find(v => v.bvid === bvid);
+                
+                if (video) {
+                    return JSON.stringify({
+                        title: video.title,
+                        md5: video.md5
+                    }, null, 2);
+                } else {
+                    return JSON.stringify({
+                        error: "未找到匹配的视频"
+                    }, null, 2);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                return JSON.stringify({
+                    error: "获取数据时发生错误"
+                }, null, 2);
+            }
+        }
+
+        async function displayResult() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const bvid = urlParams.get('bvid');
+            const resultElement = document.getElementById('result');
+
+            if (bvid) {
+                const result = await fetchVideoData(bvid);
+                resultElement.innerHTML = `<pre>${result}</pre>`;
+            } else {
+                resultElement.innerHTML = '<p class="error">请提供有效的 BV 号，例如：api.html?bvid=BV1Hx411w7XK</p>';
+            }
+        }
+
+        displayResult();
+    </script>
+</body>
+</html>
