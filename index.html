@@ -291,16 +291,13 @@
             try {
                 const response = await fetch(url);
                 if (response.ok) {
-                    button.innerHTML = `<span style="color: green;">●</span> 已存档`;
+                    button.outerHTML = `<span style="color: green;">●</span> 已存档`;
                 } else {
-                    button.innerHTML = `<span style="color: red;">●</span> 未存档`;
+                    button.outerHTML = `<span style="color: red;">●</span> 未存档`;
                 }
             } catch (error) {
                 console.error('Error checking archive status:', error);
-                button.innerHTML = `<span style="color: red;">●</span> 检测失败`;
-            } finally {
-                button.disabled = false; // 重新启用按钮
-                                button.textContent = '检测';
+                button.outerHTML = `<span style="color: red;">●</span> 检测失败`;
             }
         }
 
