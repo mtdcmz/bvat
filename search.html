@@ -157,35 +157,24 @@
 
         footer {
             background-color: var(--card-background);
-            box-shadow: 0 -2px 4px rgba(0, 0,0,0.1);
-            padding: 2rem 0;
-            margin-top: 2rem;
+            color: var(--text-color);
             text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
         }
 
         .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .poem {
-            font-style: italic;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .author-info {
-            font-size: 0.9rem;
-            color: var(--bv-color);
-        }
-
-        .author-info a {
+        footer a {
             color: var(--secondary-color);
             text-decoration: none;
         }
 
-        .author-info a:hover {
+        footer a:hover {
             text-decoration: underline;
         }
 
@@ -259,7 +248,7 @@
     <footer>
         <div class="footer-content">
             <p id="poem" class="poem">加载中...</p>
-            <p class="author-info">站长：梅塔的长名字 | <a href="https://space.bilibili.com/426046208" target="_blank">哔哩哔哩主页</a></p>
+            <p class="author-info">站长：梅塔的长名字 | <a href="https://space.bilibili.com/426046208" target="_blank">哔哩哔哩主页</a> | <a href="help.html">【测试】开放接口</a></p>
         </div>
     </footer>
 
