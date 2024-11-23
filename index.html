@@ -128,7 +128,7 @@
             font-size: 0.9rem;
         }
 
-        .go-button {
+        .go-button, .check-button {
             padding: 0.5rem 1rem;
             background-color: var(--secondary-color);
             color: white;
@@ -141,7 +141,7 @@
             display: inline-block;
         }
 
-        .go-button:hover {
+        .go-button:hover, .check-button:hover {
             background-color: #1E95C4;
         }
 
@@ -222,7 +222,7 @@
                 font-size: 0.9rem;
             }
 
-            .go-button {
+            .go-button, .check-button {
                 padding: 0.3rem 0.6rem;
                 font-size: 0.8rem;
                 display: block;
@@ -298,7 +298,7 @@
                         const archiveUrl = `http://web.archive.org/web/${dateMatch[1]}if_/https://vdse.bdstatic.com//${md5}.mp4`;
                         button.innerHTML = `<span style="color: green;">●</span> 已存档`;
                         button.onclick = () => window.open(archiveUrl, '_blank');
-                                            } else {
+                    } else {
                         button.innerHTML = `<span style="color: red;">●</span> 未存档`;
                     }
                 } else {
@@ -309,6 +309,7 @@
                 button.innerHTML = `<span style="color: red;">●</span> 检测失败`;
             } finally {
                 button.disabled = false; // 重新启用按钮
+                button.textContent = '检测';
             }
         }
 
