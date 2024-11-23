@@ -267,96 +267,96 @@
         </div>
     </footer>
 
-    <script>
-        let currentPage = 1;
-        const itemsPerPage = 10;
-        let allVideos = [];
+<script>
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    let allVideos = [];
 
-        async function fetchVideos() {
-            try {
-                const response = await fetch('vid.json');
-                const data = await response.json();
-                allVideos = data;
-                loadMoreVideos();
-            } catch (error) {
-                console.error('Error fetching video data:', error);
-            }
+    async function fetchVideos() {
+        try {
+            const response = await fetch('vid.json');
+            const data = await response.json();
+            allVideos = data;
+            loadMoreVideos();
+        } catch (error) {
+            console.error('Error fetching video data:', error);
         }
+    }
 
- async function checkArchiveStatus(md5, button) {
-    // 使用 https 替代 http，避免安全拦截
-    const url = `https://web.archive.org/web/0if_/https://vdse.bdstatic.com/${md5}.mp4`;
-    button.disabled = true; // 禁用按钮，防止重复点击
-    button.textContent = '检测中...';
+    async function checkArchiveStatus(md5, button) {
+        const url = `https://save.mtdcmz.workers.dev/?md5=${md5}`; // Cloudflare Worker API URL
+        button.disabled = true; // 禁用按钮，防止重复点击
+        button.textContent = '检测中...';
 
-    try {
-        // 发起请求检测存档状态
-        const response = await fetch(url);
+        try {
+            // 调用 Cloudflare Worker API
+            const response = await fetch(url);
+            const data = await response.json();
 
-        // 检查 HTTP 状态码，如果为 200 则表示已存档
-        if (response.ok) {
-            // 显示“已存档”状态
-            button.outerHTML = `<span style="color: green;">●</span> 已存档`;
-        } else if (response.status === 404) {
-            // 显示“未存档”状态
-            button.outerHTML = `<span style="color: red;">●</span> 未存档`;
-        } else {
-            // 其他状态码情况，标记为检测失败
-            console.error(`Unexpected response status: ${response.status}`);
+            // 根据 Worker 返回的存档状态进行更新
+            if (data.status === '存档') {
+                // 如果已存档，显示绿色圆点并标记为“已存档”
+                button.outerHTML = `<span style="color: green;">●</span> 已存档`;
+            } else if (data.status === '未存档') {
+                // 如果未存档，显示红色圆点并标记为“未存档”
+                button.outerHTML = `<span style="color: red;">●</span> 未存档`;
+            } else {
+                // 如果出现错误（例如检测失败），显示红色圆点并标记为“检测失败”
+                button.outerHTML = `<span style="color: red;">●</span> 检测失败`;
+            }
+        } catch (error) {
+            // 捕获并显示错误信息
+            console.error('Error checking archive status:', error);
             button.outerHTML = `<span style="color: red;">●</span> 检测失败`;
         }
-    } catch (error) {
-        // 捕获并显示详细的错误信息
-        console.error('Error checking archive status:', error.message);
-        button.outerHTML = `<span style="color: red;">●</span> 检测失败`;
     }
-}
 
-        async function loadMoreVideos() {
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const videosToShow = allVideos.slice(startIndex, endIndex);
+    async function loadMoreVideos() {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const videosToShow = allVideos.slice(startIndex, endIndex);
 
-            const videoContainer = document.getElementById('video-container');
+        const videoContainer = document.getElementById('video-container');
 
-            for (const video of videosToShow) {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><div class="video-title">${video.title}</div></td>
-                    <td><div class="video-bv">${video.bvid}</div></td>
-                    <td>
-                        <a href="https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank">Go➡️</a>
-                        <a href="http://web.archive.org/save/https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank" style="margin-left: 0.5rem;">Save🏛️</a>
-                    </td>
-                    <td>
-                        <button class="check-button" onclick="checkArchiveStatus('${video.md5}', this)">检测</button>
-                    </td>
-                `;
-                videoContainer.appendChild(row);
-            }
-
-            currentPage++;
-
-            if (endIndex >= allVideos.length) {
-                document.getElementById('load-more').style.display = 'none';
-            }
+        for (const video of videosToShow) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><div class="video-title">${video.title}</div></td>
+                <td><div class="video-bv">${video.bvid}</div></td>
+                <td>
+                    <a href="https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank">Go➡️</a>
+                    <a href="http://web.archive.org/save/https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank" style="margin-left: 0.5rem;">Save🏛️</a>
+                </td>
+                <td>
+                    <button class="check-button" onclick="checkArchiveStatus('${video.md5}', this)">检测</button>
+                </td>
+            `;
+            videoContainer.appendChild(row);
         }
 
-        document.getElementById('load-more').addEventListener('click', loadMoreVideos);
+        currentPage++;
 
-        async function fetchPoem() {
-            try {
-                const response = await fetch('https://v1.jinrishici.com/rensheng.txt');
-                const poem = await response.text();
-                document.getElementById('poem').textContent = poem;
-            } catch (error) {
-                console.error('Error fetching poem:', error);
-                document.getElementById('poem').textContent = '诗词加载失败，请刷新重试。';
-            }
+        if (endIndex >= allVideos.length) {
+            document.getElementById('load-more').style.display = 'none';
         }
+    }
 
-        fetchVideos();
-        fetchPoem();
-    </script>
+    document.getElementById('load-more').addEventListener('click', loadMoreVideos);
+
+    async function fetchPoem() {
+        try {
+            const response = await fetch('https://v1.jinrishici.com/rensheng.txt');
+            const poem = await response.text();
+            document.getElementById('poem').textContent = poem;
+        } catch (error) {
+            console.error('Error fetching poem:', error);
+            document.getElementById('poem').textContent = '诗词加载失败，请刷新重试。';
+        }
+    }
+
+    fetchVideos();
+    fetchPoem();
+</script>
+
 </body>
 </html>
