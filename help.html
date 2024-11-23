@@ -179,12 +179,12 @@
         <p>我们提供了一个简单的 API 接口，用于获取视频信息。您可以通过 BV 号来查询对应的视频标题和 MD5 值。</p>
 
         <h2>接口地址</h2>
-        <p>API 接口地址为：<code>https://mtdcmz.github.io/bvat/api</code></p>
+        <p>API 接口地址为：<code>https://bvat.mtdcmz.workers.dev/</code></p>
 
         <h2>请求参数</h2>
         <p>使用 GET 方法，通过 URL 参数传递 BV 号：</p>
         <div class="api-example">
-            <code>https://mtdcmz.github.io/bvat/api?bvid=BV1bs411U726</code>
+            <code>https://bvat.mtdcmz.workers.dev/?bvid=BV1bs411U726</code>
         </div>
 
         <h2>返回格式</h2>
@@ -198,13 +198,13 @@
         <h2>示例</h2>
         <p>请求：</p>
         <div class="api-example">
-            <code>https://mtdcmz.github.io/bvat/api?bvid=BV1bs411U726</code>
+            <code>https://bvat.mtdcmz.workers.dev/?bvid=BV1bs411U726</code>
         </div>
         <p>返回：</p>
         <div class="api-example">
             <pre><code>{
-    "bvid": "BV1bs411U726",
     "title": "【暴走敖尼玛】01香菜逼的厂长自爆性取向",
+    "bvid": "BV1bs411U726",
     "md5": "b1395c6d2ee2694bd5d1c9d11c72132d"
 }</code></pre>
         </div>
@@ -221,8 +221,8 @@
         <p>目前该 API 仅供测试使用，暂无使用限制。在未来可能会增加访问频率限制，请合理使用。</p>
 
         <h2>注意事项</h2>
-        <p>1. 该 API 是基于前端实现的，因此可能会有一定的加载时间。</p>
-        <p>2. 由于是静态实现，数据更新可能不会非常及时，请以实际返回结果为准。</p>
+        <p>1. 该 API 是基于 Cloudflare Workers 实现的，因此请求处理速度依赖网络状况。</p>
+        <p>2. 数据更新可能不会非常及时，请以实际返回结果为准。</p>
         <p>3. 如遇到任何问题，请及时与我们联系。</p>
     </div>
 
@@ -249,4 +249,3 @@
     </script>
 </body>
 </html>
-
