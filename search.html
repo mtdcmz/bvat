@@ -127,7 +127,7 @@
             font-size: 0.9rem;
         }
 
-        .go-button {
+        .go-button, .check-button {
             padding: 0.5rem 1rem;
             background-color: var(--secondary-color);
             color: white;
@@ -140,7 +140,7 @@
             display: inline-block;
         }
 
-        .go-button:hover {
+        .go-button:hover, .check-button:hover {
             background-color: #1E95C4;
         }
 
@@ -213,7 +213,7 @@
                 font-size: 0.9rem;
             }
 
-            .go-button {
+            .go-button, .check-button {
                 padding: 0.3rem 0.6rem;
                 font-size: 0.8rem;
                 display: block;
@@ -328,7 +328,7 @@
         }
 
         async function checkArchiveStatus(md5, button) {
-            const url = `https://save.mtdcmz.workers.dev?md5=${md5}`;
+            const url = `https://your-worker-domain.workers.dev?md5=${md5}`;
             button.disabled = true; // 禁用按钮，防止重复点击
             button.textContent = '检测中...';
 
