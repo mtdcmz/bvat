@@ -176,38 +176,45 @@
 
     <div class="container">
         <h2>API 使用说明</h2>
-        <p>我们提供了一个简单的 API 接口，用于获取视频信息。您可以通过 BV 号来查询对应的视频标题和 MD5 值。</p>
+        <p>我们提供了一个简单的 API 接口，用于获取视频信息。您可以通过 BV 号来查询对应的视频标题和 MD5 值，或直接跳转到视频播放页面。</p>
 
         <h2>接口地址</h2>
         <p>API 接口地址为：<code>https://bvat.mtdcmz.workers.dev/</code></p>
 
         <h2>请求参数</h2>
-        <p>使用 GET 方法，通过 URL 参数传递 BV 号：</p>
+        <p>使用 GET 方法，通过 URL 参数传递 BV 号和可选的跳转参数：</p>
+        <ul>
+            <li><code>bvid</code>：必需，视频的 BV 号。</li>
+            <li><code>go</code>：可选，跳转参数，取值范围如下：
+                <ul>
+                    <li><code>0</code>（默认值）：返回视频信息的 JSON 数据。</li>
+                    <li><code>1</code>：直接跳转到视频播放地址（<code>https://vdse.bdstatic.com//(视频md5).mp4</code>）。</li>
+                    <li><code>2</code>：跳转到互联网档案馆中储存的视频地址（<code>http://web.archive.org/web/https://vdse.bdstatic.com//(视频md5).mp4</code>）。</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>请求示例</h2>
+        <p>获取 JSON 数据：</p>
         <div class="api-example">
             <code>https://bvat.mtdcmz.workers.dev/?bvid=BV1bs411U726</code>
         </div>
+        <p>直接跳转到视频播放地址：</p>
+        <div class="api-example">
+            <code>https://bvat.mtdcmz.workers.dev/?bvid=BV1bs411U726&go=1</code>
+        </div>
+        <p>跳转到互联网档案馆视频地址：</p>
+        <div class="api-example">
+            <code>https://bvat.mtdcmz.workers.dev/?bvid=BV1bs411U726&go=2</code>
+        </div>
 
         <h2>返回格式</h2>
-        <p>API 返回 JSON 格式的数据，包含以下字段：</p>
+        <p>当 <code>go</code> 参数为 <code>0</code> 或未提供时，API 返回 JSON 格式的数据，包含以下字段：</p>
         <ul>
             <li><code>bvid</code>: 视频的 BV 号</li>
             <li><code>title</code>: 视频标题</li>
             <li><code>md5</code>: 视频文件的 MD5 值</li>
         </ul>
-
-        <h2>示例</h2>
-        <p>请求：</p>
-        <div class="api-example">
-            <code>https://bvat.mtdcmz.workers.dev/?bvid=BV1bs411U726</code>
-        </div>
-        <p>返回：</p>
-        <div class="api-example">
-            <pre><code>{
-    "title": "【暴走敖尼玛】01香菜逼的厂长自爆性取向",
-    "bvid": "BV1bs411U726",
-    "md5": "b1395c6d2ee2694bd5d1c9d11c72132d"
-}</code></pre>
-        </div>
 
         <h2>错误处理</h2>
         <p>如果未找到匹配的视频，API 将返回一个错误消息：</p>
