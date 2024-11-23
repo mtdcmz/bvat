@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BilibiliVideoArchiveTeam</title>
+    <link rel="icon" href="logo.png" sizes="16x16" type="image/png">
     <style>
         :root {
             --primary-color: #FB7299;
@@ -176,8 +177,8 @@
             margin-bottom: 1rem;
             color: var(--primary-color);
         }
-        
-                .author-info {
+
+        .author-info {
             font-size: 0.9rem;
             color: var(--bv-color);
         }
@@ -188,15 +189,6 @@
         }
 
         .author-info a:hover {
-            text-decoration: underline;
-        }
-        
-        footer a {
-            color: var(--secondary-color);
-            text-decoration: none;
-        }
-
-        footer a:hover {
             text-decoration: underline;
         }
 
@@ -234,7 +226,7 @@
                 padding: 0.3rem 0.6rem;
                 font-size: 0.8rem;
                 display: block;
-        margin-bottom: 0.5rem;
+                margin-bottom: 0.5rem;
             }
         }
     </style>
@@ -260,6 +252,7 @@
                     <th>视频标题</th>
                     <th>BV号</th>
                     <th>操作</th>
+                    <th>存储状态</th>
                 </tr>
             </thead>
             <tbody id="video-container"></tbody>
@@ -290,29 +283,40 @@
             }
         }
 
-        function loadMoreVideos() {
+        async function checkArchiveStatus(md5) {
+            const url = `http://web.archive.org/web/https://vdse.bdstatic.com//${md5}.mp4`;
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                if (response.status === 200) {
+                    return '<span style="color: green;">●</span> 已存档';
+                }
+            } catch (error) {
+                console.error('Error checking archive status:', error);
+            }
+            return '<span style="color: red;">●</span> 未存档';
+        }
+
+        async function loadMoreVideos() {
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
             const videosToShow = allVideos.slice(startIndex, endIndex);
 
             const videoContainer = document.getElementById('video-container');
 
-            videosToShow.forEach(video => {
+            for (const video of videosToShow) {
+                const archiveStatus = await checkArchiveStatus(video.md5);
                 const row = document.createElement('tr');
                 row.innerHTML = `
+                    <td><div class="video-title">${video.title}</div></td>
+                    <td><div class="video-bv">${video.bvid}</div></td>
                     <td>
-                        <div class="video-title">${video.title}</div>
-                    </td>
-                    <td>
-                        <div class="video-bv">${video.bvid}</div>
-                    </td>
-                    <td>
-                        <a href="https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank">Go➡️</a>
+                                                <a href="https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank">Go➡️</a>
                         <a href="http://web.archive.org/save/https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank" style="margin-left: 0.5rem;">Save🏛️</a>
                     </td>
+                    <td>${archiveStatus}</td>
                 `;
                 videoContainer.appendChild(row);
-            });
+            }
 
             currentPage++;
 
@@ -339,4 +343,3 @@
     </script>
 </body>
 </html>
-
