@@ -283,17 +283,33 @@
             }
         }
 
-        async function checkArchiveStatus(md5) {
+        async function checkArchiveStatus(md5, button) {
             const url = `http://web.archive.org/web/https://vdse.bdstatic.com//${md5}.mp4`;
+            button.disabled = true; // 禁用按钮，防止重复点击
+            button.textContent = '检测中...';
+
             try {
-                const response = await fetch(url, { method: 'HEAD' });
-                if (response.status === 200) {
-                    return '<span style="color: green;">●</span> 已存档';
+                const response = await fetch(url);
+                if (response.ok) {
+                    const text = await response.text();
+                    const dateMatch = text.match(/\/web\/(\d{14})if_\//);
+
+                    if (dateMatch && dateMatch[1]) {
+                        const archiveUrl = `http://web.archive.org/web/${dateMatch[1]}if_/https://vdse.bdstatic.com//${md5}.mp4`;
+                        button.innerHTML = `<span style="color: green;">●</span> 已存档`;
+                        button.onclick = () => window.open(archiveUrl, '_blank');
+                                            } else {
+                        button.innerHTML = `<span style="color: red;">●</span> 未存档`;
+                    }
+                } else {
+                    button.innerHTML = `<span style="color: red;">●</span> 未存档`;
                 }
             } catch (error) {
                 console.error('Error checking archive status:', error);
+                button.innerHTML = `<span style="color: red;">●</span> 检测失败`;
+            } finally {
+                button.disabled = false; // 重新启用按钮
             }
-            return '<span style="color: red;">●</span> 未存档';
         }
 
         async function loadMoreVideos() {
@@ -304,16 +320,17 @@
             const videoContainer = document.getElementById('video-container');
 
             for (const video of videosToShow) {
-                const archiveStatus = await checkArchiveStatus(video.md5);
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td><div class="video-title">${video.title}</div></td>
                     <td><div class="video-bv">${video.bvid}</div></td>
                     <td>
-                                                <a href="https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank">Go➡️</a>
+                        <a href="https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank">Go➡️</a>
                         <a href="http://web.archive.org/save/https://vdse.bdstatic.com//${video.md5}.mp4" class="go-button" target="_blank" style="margin-left: 0.5rem;">Save🏛️</a>
                     </td>
-                    <td>${archiveStatus}</td>
+                    <td>
+                        <button class="check-button" onclick="checkArchiveStatus('${video.md5}', this)">检测</button>
+                    </td>
                 `;
                 videoContainer.appendChild(row);
             }
