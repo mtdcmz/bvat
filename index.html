@@ -284,7 +284,7 @@
     }
 
     async function checkArchiveStatus(md5, button) {
-        const url = `https://save.mtdcmz.workers.dev/?md5=${md5}`; // Cloudflare Worker API URL
+        const url = `https://save.mtdcmz.us.kg/?md5=${md5}`; // Cloudflare Worker API URL
         button.disabled = true; // 禁用按钮，防止重复点击
         button.textContent = '检测中...';
 
